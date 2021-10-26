@@ -35,6 +35,10 @@ This is useful when you __do not__ want to run all tests in check section - gues
     ```bash
     mock -r <fedora-version-arch> --shell
     ```
+##### How to add some package to `mock`?
+```bash
+$ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-arch = fedora-34-x86, package = vim
+```
 
 ### RHEL packages with `%check` section
 
