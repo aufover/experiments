@@ -35,7 +35,7 @@ This is useful when you __do not__ want to run all tests in check section - gues
     ```bash
     mock -r <fedora-version-arch> --shell
     ```
-##### How to add some package to `mock`?
+##### How to add (install) some package to `mock`?
 ```bash
 $ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-arch = fedora-34-x86, package = vim
 ```
@@ -48,6 +48,13 @@ $ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-ar
 | --------------------- | ----------------------------------- | ------ |
 | `grep`                | `cbmc-convert-output`  script error | RESULT |
 
+##### When the output is unreadably large:
+
+```bash
+<some cbmc-flags> --json-ui | cbmc-convert-output | sed 's/: note:/: path:/g' | csgrep --prune 1
+
+```
+
 RESULT:
 
 Following command: most of cbmc flags, output generate 
@@ -55,6 +62,7 @@ Following command: most of cbmc flags, output generate
 ```bash
 cbmc --div-by-zero-check --signed-overflow-check --unsigned-overflow-check --pointer-overflow-check --conversion-check --undefined-shift-check --float-overflow-check --nan-check --unwind 1 --memory-leak-check --pointer-check ./grep | grep ": FAILURE"
 ```
+
 
 Output:
 
