@@ -1,3 +1,14 @@
+### About project (and how it works)
+
+[Automation of Formal Verification (AUFOVER) - slides](https://kdudka.fedorapeople.org/kdudka-aufover-211111.pdf)
+
+##### Presented at DevConf 2021 (in the context of dynamic analysis):
+
+* [slides](https://kdudka.fedorapeople.org/kdudka-devconf-21.pdf)
+
+* [video](https://www.youtube.com/watch?v=FjV84hbD1GY)
+* [demo](https://github.com/csutils/cswrap/wiki/csexec)
+
 ### How to conduct experiments
 
 #### With [`csmock`](https://github.com/csutils/csmock)
@@ -15,6 +26,14 @@ $ csmock -j<n>-f -t <tool> --<tool>-add-flag '<flags>' --<tool>-timeout <n> --ke
 `--no-clean` *do not clean chroot when it becomes unused* - this option is important if you like to run the verification by yourself
 
 #### *With* your favorite verification tool
+
+Tools list (formal verification only):
+
+* [cbmc](https://github.com/diffblue/cbmc)            [EXPERIMENTAL] Bounded Model Checker for C and C++ programs
+* [divine](https://divine.fi.muni.cz/)           [EXPERIMENTAL] A formal verification tool based on explicit-state model checking.
+* [symbiotic](http://staticafi.github.io/symbiotic/)     [EXPERIMENTAL] A formal verification tool based on instrumentation, program slicing and KLEE.
+
+more tools (`csmock --list-available-tools`): `clang`, `cppcheck`, `gcc`, `strace`,`valgrind`...
 
 ##### `TIMEOUT` hack
 
@@ -40,13 +59,9 @@ This is useful when you __do not__ want to run all tests in check section - gues
 $ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-arch = fedora-34-x86, package = vim
 ```
 
-### RHEL packages with `%check` section
 
------
 
-| verified package name | csmock                              | cbmc   |
-| --------------------- | ----------------------------------- | ------ |
-| `grep`                | `cbmc-convert-output`  script error | RESULT |
+#### [CBMC](https://src.fedoraproject.org/rpms/cbmc) (tips and tricks):
 
 ##### When the output is unreadably large:
 
@@ -55,37 +70,9 @@ $ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-ar
 
 ```
 
-RESULT:
-
-Following command: most of cbmc flags, output generate 
+##### some cbmc-flags:
 
 ```bash
-cbmc --div-by-zero-check --signed-overflow-check --unsigned-overflow-check --pointer-overflow-check --conversion-check --undefined-shift-check --float-overflow-check --nan-check --unwind 1 --memory-leak-check --pointer-check ./grep | grep ": FAILURE"
+--div-by-zero-check --signed-overflow-check --unsigned-overflow-check --pointer-overflow-check --conversion-check --undefined-shift-check --float-overflow-check --nan-check --unwind 1 --memory-leak-check --pointer-check
 ```
-
-
-Output:
-
-```bash
-<builtin-library-setlocale> function setlocale
-[setlocale.pointer_dereference.1] line 11 dereference failure: pointer NULL in *locale: FAILURE
-[setlocale.pointer_dereference.3] line 11 dereference failure: deallocated dynamic object in *locale: FAILURE
-[setlocale.pointer_dereference.4] line 11 dereference failure: dead object in *locale: FAILURE
-[setlocale.pointer_dereference.5] line 11 dereference failure: pointer outside object bounds in *locale: FAILURE
-
-[overflow.5] file dfa.c line 129 arithmetic overflow on unsigned - in (((charclass_word)1 << 64 - 1) << 1) - (unsigned long int)1: FAILURE
-
-localeinfo.c function init_localeinfo
-[init_localeinfo.overflow.2] line 98 arithmetic overflow on signed to unsigned type conversion in (unsigned char)i: FAILURE
-[init_localeinfo.overflow.4] line 102 arithmetic overflow on unsigned to signed type conversion in (signed int)-len: FAILURE
-[init_localeinfo.overflow.5] line 102 arithmetic overflow on signed unary minus in -((signed int)-len): FAILURE
-[init_localeinfo.overflow.6] line 102 arithmetic overflow on signed type conversion in (signed char)(len <= (unsigned long int)1 ? 1 : -((signed int)-len)): FAILURE
-[init_localeinfo.overflow.7] line 103 arithmetic overflow on signed to unsigned type conversion in (unsigned int)wc: FAILURE
-
-mbrtowc.c function rpl_mbrtowc
-[rpl_mbrtowc.overflow.1] line 147 arithmetic overflow on signed to unsigned type conversion in (size_t)-2: FAILURE
-11 of 52721 failed
-```
-
-
 
