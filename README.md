@@ -10,7 +10,23 @@
 
 ### How to conduct experiments
 
-#### With [`csmock`](https://github.com/csutils/csmock)
+#### With [`csmock`](https://github.com/csutils/csmock) with `csmock plug-ins`
+Formal verification of RPM packages with CBMC, Divine, and Symbiotic is available in stable Fedora releases.
+
+The csmock plug-ins for these tools are still experimental and they have
+some technical limitations:
+
+- They work only for source RPM packages that contain the %check section
+  that directly or indirectly invokes the binaries produced in the %build
+  section.
+
+- The tools are known to work reliably only for programs written in C.
+
+The plug-ins can be installed on a Fedora system using the following command:
+
+    $ sudo dnf install csmock-plugin-{cbmc,divine,symbiotic}
+
+Then you can formally verify RPM packages of your choice:
 
 ```bash
 $ dnf download --source <package> # get <package>.src.rpm
