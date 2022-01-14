@@ -33,13 +33,8 @@ $ dnf download --source <package> # get <package>.src.rpm
 $ # or
 $ koji download-build src <package> # get <package>.src.rpm
 
-$ csmock -j<n> -f -t <tool> --<tool>-add-flag '<flags>' --<tool>-timeout <n> --keep-going --no-clean ./<package>.src.rpm # add vim, if you are planning to experiment manually
+$ csmock -t <tool> --<tool>-add-flag '<flags>' --<tool>-timeout <n> --keep-going --no-clean ./<package>.src.rpm
 ```
-
-`--keep-going` *continue as much as possible after an error* - error can be for example `timeout`
-
-`--no-clean` *do not clean chroot when it becomes unused* - this option is important if you'd like to run the verification by yourself
-
 #### *With* your favourite verification tool
 
 Tools list (formal verification only):
