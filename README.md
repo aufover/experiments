@@ -28,13 +28,19 @@ The plug-ins can be installed on a Fedora system using the following command:
 
 Then you can formally verify RPM packages of your choice:
 
-```bash
-$ dnf download --source <package> # get <package>.src.rpm
-$ # or
-$ koji download-build src <package> # get <package>.src.rpm
+##### Download the package for verifiaction:
 
-$ csmock -t <tool> --<tool>-add-flag '<flags>' --<tool>-timeout <n> --keep-going --no-clean ./<package>.src.rpm
-```
+    $ dnf download --source <package> # get <package>.src.rpm
+or
+
+    $ koji download-build src <package> # get <package>.src.rpm  
+##### Then run verification with `csmock`:
+In simple:
+    
+    $ csmock -t ${tool} ${pkg-to-verify}.src.rpm
+or more specific way:
+
+    $ csmock -t ${tool} --${tool}-add-flag='${tool-flags}' --${tool}-timeout=${number} ${pkg-to-verify}.src.rpm
 #### *With* your favourite verification tool
 
 Tools list (formal verification only):
@@ -58,25 +64,31 @@ This is useful when you __do not__ want to run all tests in the `%check` section
                % (props.spec_in, strlist_to_shell_cmd(rpm_opts))
   ```
 
-* Thanks to `--no-clean` option, run the following command, where `<fedora-version-arch>` is the environment where `csmock ...` command ran previously
+* Thanks to `--no-clean` option, run the following command, where `${fedora-version-arch}` is the environment where `csmock ...` command ran previously
   ```bash
-  mock -r <fedora-version-arch> --shell
+  mock --root ${fedora-version-arch} --shell
   ```
 
 ##### How to add (install) some package to `mock`?
-
+Maybe `vim`, if you are planning to experiment manually:
 ```bash
-$ mock --root <fedora-version-arch> --install <package> # e.g. fedora-version-arch = fedora-34-x86_64, package = vim
+$ mock --root ${fedora-version-arch} --install ${package} # e.g. fedora-version-arch = fedora-34-x86_64, package = vim
 ```
 
 #### [CBMC](https://src.fedoraproject.org/rpms/cbmc) (tips and tricks):
 
+##### Useful `csmock` options when you want to play inside the chosen build root:
+
+`--keep-going` *continue as much as possible after an error* - error can be for example `timeout`
+
+`--no-clean` *do not clean chroot when it becomes unused* - this option is important if you'd like to run the verification by yourself
+
 ##### When the output is unreadably large:
 
 ```bash
-<some cbmc-flags> --json-ui | cbmc-convert-output | sed 's/: note:/: path:/g' | csgrep --prune 1
+{some cbmc-flags} --json-ui | cbmc-convert-output | sed 's/: note:/: path:/g' | csgrep --prune 1
 ```
-where `<some cbmc-flags>` is at least one of the following flags
+where `{some cbmc-flags}` is at least one of the following flags
 ```bash
---div-by-zero-check --signed-overflow-check --unsigned-overflow-check --pointer-overflow-check --conversion-check --undefined-shift-check --float-overflow-check --nan-check --unwind <num> --memory-leak-check --pointer-check
+--div-by-zero-check --signed-overflow-check --unsigned-overflow-check --pointer-overflow-check --conversion-check --undefined-shift-check --float-overflow-check --nan-check --memory-leak-check --pointer-check
 ```
