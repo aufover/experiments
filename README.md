@@ -61,7 +61,7 @@ More tools (`csmock --list-available-tools`): `clang`, `cppcheck`, `gcc`, `shell
 
 This is useful when you __do not__ want to run all tests in the `%check` section - guess your timeout number and the process (`rpmbuild -bi`) will hopefully stop where you want!
 
-* Change [line](https://github.com/csutils/csmock/blob/main/py/csmock#L283) in `/bin/csmock` like this:
+* Change [line](https://github.com/csutils/csmock/blob/56274586eec3268dbbd3719a2da908d6b0075b7d/py/csmock#L296) in `/bin/csmock` like this:
   ```diff
            # construct basic `rpmbuild -bi ...` command
            rpm_opts = props.rpm_opts + extra_rpm_opts
