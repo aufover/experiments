@@ -41,11 +41,17 @@ In simple:
 or more specific way:
 
     $ csmock -t ${tool} --${tool}-add-flag='${tool-flags}' --${tool}-timeout=${number} ${pkg-to-verify}.src.rpm
+    
+##### Get your results:
+
+    $ tar -xvf ./${pkg-to-verify}.tar.xz '*/${tool}-capture/'
+
 ##### copy-paste example:
 ```bash
 $ dnf install csmock-plugin-cbmc cbmc -y # formal_verification_tool=cbmc
 $ dnf download --source logrotate # pkg_to_verify=logrotate
 $ csmock -t cbmc logrotate-3.18.1-2.fc35.src.rpm
+$ tar -xvf ./logrotate-3.18.1-2.fc35.tar.xz '*/cbmc-capture/'
 ```
 #### *With* your favourite verification tool
 
